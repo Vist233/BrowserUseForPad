@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     elementHighlight: document.getElementById('elementHighlight'),
     hoverDelay: document.getElementById('hoverDelay'),
     resetSettings: document.getElementById('resetSettings'),
-    saveSettings: document.getElementById('saveSettings')
+    saveSettings: document.getElementById('saveSettings'),
+    triggerFocusMode: document.getElementById('triggerFocusMode')
   };
 
   // 加载当前设置
@@ -141,6 +142,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // 延迟滑块
     elements.hoverDelay.addEventListener('input', updateDelayDisplay);
+
+    // 聚焦模式按钮
+    elements.triggerFocusMode.addEventListener('click', async () => {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab) {
+        chrome.tabs.sendMessage(tab.id, { action: 'toggleFocusMode' });
+        window.close(); // Close the popup
+      }
+    });
     
     // 自动保存开关状态
     Object.values(elements).forEach(element => {

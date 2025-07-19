@@ -86,8 +86,7 @@ class TouchHandler {
       this.cancelLongPress();
     }
 
-    // 触发元素高亮
-    this.highlightElementUnderTouch(touch.clientX, touch.clientY);
+    // Element highlighting is now handled by ElementHighlighter
   }
 
   handleTouchEnd(event) {
@@ -163,42 +162,7 @@ class TouchHandler {
     
     document.dispatchEvent(longPressEvent);
 
-    // 如果是悬停元素，模拟悬停效果
-    if (this.isHoverableElement(target)) {
-      this.simulateHover(target, touch);
-    }
-  }
-
-  simulateHover(target, touch) {
-    // 添加悬停样式
-    target.classList.add(CSS_CLASSES.HOVER_SIMULATED);
-    
-    // 模拟鼠标进入事件
-    simulateMouseEvent(target, 'mouseenter', {
-      clientX: touch.clientX,
-      clientY: touch.clientY
-    });
-    
-    simulateMouseEvent(target, 'mouseover', {
-      clientX: touch.clientX,
-      clientY: touch.clientY
-    });
-
-    // 延迟移除悬停效果
-    setTimeout(() => {
-      target.classList.remove(CSS_CLASSES.HOVER_SIMULATED);
-      
-      // 模拟鼠标离开事件
-      simulateMouseEvent(target, 'mouseleave', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-      
-      simulateMouseEvent(target, 'mouseout', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-    }, 2000); // 2秒后自动取消悬停
+    // The hover simulation logic is now handled by HoverSimulator
   }
 
   handleNormalClick(target, touch) {
@@ -209,25 +173,6 @@ class TouchHandler {
     });
   }
 
-  highlightElementUnderTouch(x, y) {
-    if (!this.settings.highlightEnabled) return;
-
-    const element = getInteractiveElementAt(x, y);
-    if (element) {
-      // 移除之前的高亮
-      document.querySelectorAll('.tb-highlighted').forEach(el => {
-        el.classList.remove('tb-highlighted');
-      });
-      
-      // 添加新的高亮
-      element.classList.add('tb-highlighted');
-      
-      // 延迟移除高亮
-      setTimeout(() => {
-        element.classList.remove('tb-highlighted');
-      }, 1000);
-    }
-  }
 
   isHoverableElement(element) {
     if (!element || !element.matches) return false;

@@ -30,6 +30,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case 'updateSettings':
       updateSettings(request.settings, sendResponse);
       return true;
+    case 'reloadTab':
+      chrome.tabs.reload(sender.tab.id);
+      break;
+    case 'goBack':
+      chrome.tabs.goBack(sender.tab.id);
+      break;
+    case 'goForward':
+      chrome.tabs.goForward(sender.tab.id);
+      break;
     default:
       console.log('Unknown action:', request.action);
   }
